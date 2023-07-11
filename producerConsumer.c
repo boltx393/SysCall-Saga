@@ -1,76 +1,65 @@
-#include <stdio.h>
-#include <stdlib.h>
+#include<stdio.h> 
+#include<stdlib.h> 
 
-#define MAX_CHOICES 100
+int count = 0; 
+int fullSlots = 0; 
+int emptySlot = 5; 
+int mutex = 1; 
 
-int mutex = 1;
-int full = 0;
-int empty = 10;
-int x = 0;
-
-void producer()
+int producer()
 {
-    if (mutex == 1 && empty != 0)
+    if(mutex==1 && emptySlot!=0)
     {
-        --mutex;
-        ++full;
-        --empty;
-        x++;
-        printf("Producer produces item %d\n", x);
-        ++mutex;
+        mutex--; 
+        fullSlots++; 
+        emptySlot--; 
+        count++; 
+        printf("Producer creates process %d\n", count); 
+        mutex++; 
     }
     else
     {
-        printf("Buffer is full!\n");
+        printf("Buffer is full\n"); 
     }
+
 }
-
-void consumer()
+int consumer()
 {
-    if (mutex == 1 && full != 0)
+    if(mutex==1 && emptySlot!=5)
     {
-        --mutex;
-        --full;
-        ++empty;
-        printf("Consumer consumes item %d\n", x);
-        x--;
-        ++mutex;
+        mutex--; 
+        fullSlots--; 
+        emptySlot++; 
+        printf("Consumer consumer process %d\n", count); 
+        count--; 
+        mutex++;
     }
     else
     {
-        printf("Buffer is empty\n");
+        printf("Buffer is empty\n"); 
     }
+
 }
 
 int main()
 {
-    int choices[MAX_CHOICES];
-    int numChoices;
-
-    printf("Enter the number of choices: ");
-    scanf("%d", &numChoices);
-
-    printf("Enter the choices (1 for Producer, 2 for Consumer):\n");
-    for (int i = 0; i < numChoices; i++)
+    int n = 0; 
+    while(n!=3)
     {
-        scanf("%d", &choices[i]);
-    }
-
-    for (int i = 0; i < numChoices; i++)
-    {
-        if (choices[i] == 1)
+        printf("1 for Producer, 2 for Consumer, 3 to exit\n"); 
+        scanf("%d", &n); 
+        if(n==1)
         {
-            producer();
+            producer(); 
         }
-        else if (choices[i] == 2)
+        else if(n==2)
         {
-            consumer();
+            consumer(); 
         }
-        else
+        else if(n==3)
         {
-            printf("Invalid choice!\n");
+            printf("Ending the problem with %d process in buffer", count); 
+            exit(0); 
         }
     }
-
-    return 0;
 }
